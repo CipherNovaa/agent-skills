@@ -1,0 +1,22 @@
+[
+  {
+    "file": "Templates/Daily.md",
+    "all_of": ["### Checklist"],
+    "why": "habit tracking reads the checklist under this heading"
+  },
+  {
+    "file": "Templates/Daily.md",
+    "any_of": ["[[", "obsidian://"],
+    "why": "the daily must still link to today's brain-dump note"
+  },
+  {
+    "file": "Templates/Weekly Review.md",
+    "all_of": ["type: review"],
+    "why": "weekly-review and the janitor find review notes by this property"
+  },
+  {
+    "file": "1 Active/Tasks/Backlog.md",
+    "all_of": ["kanban-plugin:"],
+    "why": "the task board stops rendering as a board without this marker"
+  }
+]

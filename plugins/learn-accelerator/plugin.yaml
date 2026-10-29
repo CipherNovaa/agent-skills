@@ -1,0 +1,9 @@
+name: learn-accelerator
+version: 1.0.0
+description: "A learning accelerator as a native tool. Explains math problems, word problems, and programming/C++ concepts in their personal study style (answer-first, step-by-step, a memory trick, and a worked-example/gotcha), personalised from the user's Obsidian math notes and a growing learning-style profile. Fully local (qwen3:8b); auto fact-checks concepts against the local SearXNG. Same engine as the Supernote //learn command."
+author: CipherNovaa
+kind: standalone
+platforms:
+  - linux
+provides_tools:
+  - learn

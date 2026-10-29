@@ -1,0 +1,10 @@
+name: system-updater
+version: 1.0.0
+description: "Check for and apply system updates for the user — safely. check_updates is read-only: it lists everything pending across the official Arch repos (via checkupdates, no risky partial sync), the AUR, and Flatpak, and flags risky packages (kernel/nvidia/glibc/systemd) plus whether a reboot is needed. apply_updates runs Flatpak updates directly (per-user, no password); for official/AUR it hands back the exact `paru -Syu` command for the user to run (needs sudo). Same engine as engines/sys_update.py."
+author: CipherNovaa
+kind: standalone
+platforms:
+  - linux
+provides_tools:
+  - check_updates
+  - apply_updates

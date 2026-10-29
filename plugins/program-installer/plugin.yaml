@@ -1,0 +1,10 @@
+name: program-installer
+version: 1.0.0
+description: "Find and install programs for the user. Scans the official Arch repos, Flathub, and the AUR for a program, ranks the options, and shows exactly what would be installed. Installs Flatpaks directly (per-user, no password, reversible); for repo/AUR packages it hands back the exact vetted command to run (needs sudo). Same engine as engines/prog_install.py."
+author: CipherNovaa
+kind: standalone
+platforms:
+  - linux
+provides_tools:
+  - search_programs
+  - install_program

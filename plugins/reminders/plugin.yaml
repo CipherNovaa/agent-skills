@@ -1,0 +1,11 @@
+name: reminders
+version: 1.0.0
+description: "Set, list, and cancel real scheduled reminders that ping the user on Discord at the chosen time, backed by `hermes cron`. Deterministic (no LLM fires when the reminder triggers — the exact text is delivered). This is the actuator for the idea-planner's suggested reminders. Engine: engines/reminder_set.py."
+author: CipherNovaa
+kind: standalone
+platforms:
+  - linux
+provides_tools:
+  - set_reminder
+  - list_reminders
+  - cancel_reminder

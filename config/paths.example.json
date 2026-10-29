@@ -1,0 +1,29 @@
+{
+  "_README": "Copy to ~/.config/myos/paths.json (or point MYOS_CONFIG at it). Single source of truth for the vault layout: every engine reads this, so a reorganisation is one edit here. Keys you leave out fall back to the defaults in engines/myos_paths.py.",
+  "schema_version": 1,
+  "layout": "layers-v1",
+  "vault": "~/Documents/Obsidian Vault",
+  "claude_memory_dir": "~/.claude/projects/<your-project-slug>/memory",
+  "skills_dir": "",
+  "dirs": {
+    "inbox": "0 Capture/Inbox",
+    "sandbox": "0 Capture/Sandbox",
+    "projects": "1 Active/Projects",
+    "journal": "1 Active/Journal",
+    "tasks": "1 Active/Tasks",
+    "inventory": "1 Active/Inventory",
+    "academics": "2 Knowledge/Academics",
+    "systems": "2 Knowledge/Systems",
+    "source_material": "2 Knowledge/Source Material",
+    "myos": "3 myOS",
+    "tags": "Tags",
+    "templates": "Templates",
+    "images": "Images",
+    "archive": "_Archive",
+    "claude_memory": "CLAUDE"
+  },
+  "managed_dirs": ["inbox", "tasks", "journal", "projects"],
+  "recall_dirs": ["myos", "academics", "systems", "source_material", "projects", "inbox", "journal", "claude_memory", "inventory"],
+  "janitor_skip": [],
+  "exclude_globs": ["**/_Archive/**", "**/Archive/**", "**/.trash/**"]
+}

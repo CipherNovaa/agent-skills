@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.bak*
+*.log
+.venv/
+venv/
+.env
+!.env.example
+.cache/
+*.npz
+.obsidian/
+.DS_Store

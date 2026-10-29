@@ -1,0 +1,7 @@
+name: note
+version: 1.0.0
+description: "Top-level /note slash command → drops a quick note into the user's canonical capture inbox (0 Capture/Inbox) with proper myOS `type: note` frontmatter. The never-lose floor (Q7). Uses the myos_paths spine for the path, so it can't recreate the old rogue Vault/Inbox."
+author: CipherNovaa
+kind: standalone
+platforms:
+  - linux

@@ -1,0 +1,9 @@
+name: idea-planner
+version: 1.0.0
+description: "Turn a goal the user wants to accomplish into a concrete, structured plan: milestones, actionable next steps as Obsidian-Tasks checkboxes with due dates, web-sourced resources, and suggested reminders. Fully local (qwen3:8b); researches the goal via the local SearXNG. Same engine as the Supernote //plan command (engines/idea_plan.py)."
+author: CipherNovaa
+kind: standalone
+platforms:
+  - linux
+provides_tools:
+  - plan
