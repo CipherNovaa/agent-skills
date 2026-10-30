@@ -17,7 +17,7 @@ A two-agent operating system for a personal knowledge vault: **a cloud LLM is th
 - **Answers from your notes with citations.** Hybrid semantic + lexical recall over the vault with a local embedding model, falling back to lexical search if the model is down.
 - **Adds safe system tools to chat.** Check and apply system updates, find and install programs, explain a math or programming topic in your study style, turn a goal into a plan, schedule reminders, drop a note into the inbox. Anything that needs root comes back as a command for you to run.
 
-<!-- MEDIA: a terminal recording (asciinema or a GIF) of `python engines/myos_janitor_scan.py` against examples/vault, then the same scan after deleting the "### Checklist" heading from Templates/Daily.md — showing the 🚨 feature-contract finding and the new entry appended to CLAUDE/Escalations.md. -->
+<!-- MEDIA: a terminal recording (asciinema or a GIF) of `python engines/myos_janitor_scan.py` against examples/vault, then the same scan after deleting the "### Checklist" heading from Templates/Daily.md — showing the 🚨 feature-contract finding and the new entry appended to ARCHITECT/Escalations.md. -->
 
 ## How it works
 
@@ -36,7 +36,7 @@ flowchart LR
 
     subgraph vault["Obsidian vault (synced)"]
         N[(Notes, inbox,<br/>tasks, templates)]
-        M[(CLAUDE/<br/>shared memory)]
+        M[(ARCHITECT/<br/>shared memory)]
         E[(Escalations.md)]
     end
 
@@ -64,13 +64,13 @@ The rule that makes this work: **a skill never asks the small model to improvise
 
 ### Escalation is the safety valve
 
-[`escalate-to-architect`](skills/myos/escalate-to-architect/SKILL.md) appends an entry to `CLAUDE/Escalations.md` with the context, what was tried, why it stopped, and `Status: OPEN`. It's a file, so it works offline and survives restarts. The cloud LLM reads the queue at the start of a session, resolves items and marks them done. The janitor writes to the same queue when it finds a critical breakage, so the architect has one inbox.
+[`escalate-to-architect`](skills/myos/escalate-to-architect/SKILL.md) appends an entry to `ARCHITECT/Escalations.md` with the context, what was tried, why it stopped, and `Status: OPEN`. It's a file, so it works offline and survives restarts. The cloud LLM reads the queue at the start of a session, resolves items and marks them done. The janitor writes to the same queue when it finds a critical breakage, so the architect has one inbox.
 
 A kind of escalation that keeps recurring is the signal to write a new skill. That's the trust ladder: repeated escalations graduate into owned skills.
 
 ### Earned autonomy
 
-Every skill's frontmatter states who can run it (`runner: hermes | claude | either`), whether it's proven (`status: draft | published`), how battle-tested it is (`confidence: 0.0–1.0`), and exactly when to stop (`escalate_when`). The fields make trust legible: a draft skill at 0.5 is one the owner still watches; a published skill at 0.9 runs unattended. The full contract is in [docs/skill-contract.md](docs/skill-contract.md).
+Every skill's frontmatter states who can run it (`runner: hermes | architect | either`), whether it's proven (`status: draft | published`), how battle-tested it is (`confidence: 0.0–1.0`), and exactly when to stop (`escalate_when`). The fields make trust legible: a draft skill at 0.5 is one the owner still watches; a published skill at 0.9 runs unattended. The full contract is in [docs/skill-contract.md](docs/skill-contract.md).
 
 ### Verification first
 
@@ -91,11 +91,11 @@ Each `SKILL.md` has a mandatory `## Verification` section with an observable che
 
 ### One brain for both agents
 
-The cloud coding agent keeps its memory as markdown files in a per-project directory. [`myos_claude_memory_sync.sh`](engines/myos_claude_memory_sync.sh) moves each real file into the vault's `CLAUDE/<Category>/` folder and leaves a symlink behind, relinks files that arrive from another device, and prunes dead links. There's one copy of every memory, it syncs with the vault, the owner can edit it in Obsidian, and Hermes's recall searches it. The janitor flags any memory that ends up as a real file on both sides, because two copies drift. A restore script undoes the whole arrangement.
+The cloud coding agent keeps its memory as markdown files in a per-project directory. [`myos_memory_sync.sh`](engines/myos_memory_sync.sh) moves each real file into the vault's `ARCHITECT/<Category>/` folder and leaves a symlink behind, relinks files that arrive from another device, and prunes dead links. There's one copy of every memory, it syncs with the vault, the owner can edit it in Obsidian, and Hermes's recall searches it. The janitor flags any memory that ends up as a real file on both sides, because two copies drift. A restore script undoes the whole arrangement.
 
 ### Recall
 
-[`claude_powers.py recall`](engines/claude_powers.py) answers a question from the vault only, with `[[citations]]`. Note selection is a hybrid ([`myos_semrecall.py`](engines/myos_semrecall.py)): cosine similarity from a local embedding model blended 0.65/0.35 with a TF-IDF score that weights rare terms, so "typeface" finds the font-config note. The embedding index is incremental by content hash. If numpy, Ollama or the index is unavailable, it falls back to lexical ranking, says so in its sources line, and still answers.
+[`architect_powers.py recall`](engines/architect_powers.py) answers a question from the vault only, with `[[citations]]`. Note selection is a hybrid ([`myos_semrecall.py`](engines/myos_semrecall.py)): cosine similarity from a local embedding model blended 0.65/0.35 with a TF-IDF score that weights rare terms, so "typeface" finds the font-config note. The embedding index is incremental by content hash. If numpy, Ollama or the index is unavailable, it falls back to lexical ranking, says so in its sources line, and still answers.
 
 ### Walls hit along the way
 
@@ -130,7 +130,7 @@ pip install --user requests numpy pyyaml
 
 # 1. Describe your vault layout (every engine reads this one file).
 mkdir -p ~/.config/myos
-cp config/paths.example.json ~/.config/myos/paths.json      # edit "vault" and "claude_memory_dir"
+cp config/paths.example.json ~/.config/myos/paths.json      # edit "vault" and "architect_memory_dir"
 cp config/contracts.example.json ~/.config/myos/contracts.json
 export MYOS_ENGINES=~/agent-skills/engines                   # see .env.example for the rest
 
@@ -167,11 +167,11 @@ python engines/myos_migrate_note.py --all          # dry run
 | `python engines/myos_janitor_scan.py [--brief] [--escalate]` | Read-only drift scan; `--escalate` queues critical findings |
 | `python engines/myos_janitor_scan.py --bless` | Accept the current skill set as expected |
 | `bash engines/myos_selftest.sh` | Live capability check, ✅/❌ per line |
-| `python engines/claude_powers.py recall "<question>"` | Answer from the vault with citations |
+| `python engines/architect_powers.py recall "<question>"` | Answer from the vault with citations |
 | `python engines/myos_task.py add "<text>" --due friday` | Add a task to the board |
 | `python engines/myos_apply_template.py "<Template>" "<Title>" --dir journal` | Render a Templater template outside Obsidian |
 | `python engines/myos_migrate_note.py --all [--apply]` | Add `type:` frontmatter to old notes, body untouched |
-| `bash engines/myos_claude_memory_sync.sh` | Mirror the cloud agent's memory into the vault (idempotent) |
+| `bash engines/myos_memory_sync.sh` | Mirror the cloud agent's memory into the vault (idempotent) |
 
 A morning brief is two lines in a script under `~/.hermes/scripts/` (Hermes's no-agent cron jobs run scripts from there and deliver their stdout verbatim):
 

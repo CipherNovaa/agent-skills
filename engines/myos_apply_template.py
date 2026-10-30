@@ -4,7 +4,7 @@ myos_apply_template.py — instantiate an Obsidian/Templater template into a
 finished note, OUTSIDE Obsidian.
 
 The vault's templates (Templates/*.md) use Templater `<% %>` expressions that only
-render inside Obsidian. Any note Hermes/Claude creates from them shows the raw
+render inside Obsidian. Any note Hermes/the architect creates from them shows the raw
 `<% tp.file.title %>` / `<% tp.date.now("YYYY-MM-DD") %>` literally. This engine
 renders the small, bounded subset the templates actually use so a note created
 offline looks exactly like one Obsidian made.

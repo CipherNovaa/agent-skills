@@ -33,10 +33,10 @@ fi
 if "$PY" "$HERE/myos_apply_template.py" --selftest >/dev/null 2>&1; then ok "template engine renders all templates"
 else bad "template engine: a template uses an unsupported expression (myos_apply_template.py --selftest)"; fi
 
-# 4. Claude memory symlinks intact (no broken links)
+# 4. Architect memory symlinks intact (no broken links)
 if [ -n "$MEM" ] && [ -d "$MEM" ]; then
   BROKEN=$(find "$MEM" -maxdepth 1 -name '*.md' -type l ! -exec test -e {} \; -print 2>/dev/null | wc -l)
-  if [ "$BROKEN" -eq 0 ]; then ok "memory links intact ($(ls "$MEM"/*.md 2>/dev/null | wc -l) memories)"; else bad "$BROKEN broken memory link(s) — run myos_claude_memory_sync.sh"; fi
+  if [ "$BROKEN" -eq 0 ]; then ok "memory links intact ($(ls "$MEM"/*.md 2>/dev/null | wc -l) memories)"; else bad "$BROKEN broken memory link(s) — run myos_memory_sync.sh"; fi
 fi
 
 # 5. Hermes skills discoverable (the myos category)

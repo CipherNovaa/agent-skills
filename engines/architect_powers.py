@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-claude_powers.py — "powers" ported from Claude to the local Hermes system.
+architect_powers.py — "powers" ported from the cloud architect to the local Hermes system.
 
-Abilities Claude has that are genuinely useful for study, implemented
+Abilities the cloud architect has that are genuinely useful for study, implemented
 fully locally (a local model via Ollama, no cloud):
 
   * recall(question)   — grounded QA over the user's OWN Obsidian vault. Keyword-
                          scores every note, feeds the top matches to the LLM,
                          and answers WITH [[citations]] to the notes it used.
-                         "Ask your own brain." (Claude's signature: reason over
+                         "Ask your own brain." (the architect's signature: reason over
                          a corpus + cite sources.)
   * quiz(content, n)   — turn note content into active-recall questions with
                          hidden (spoiler) answers. A study accelerator.
@@ -18,9 +18,9 @@ All three return Obsidian-flavoured markdown and never raise — on any failure
 they return a short italic error note so the watcher keeps processing.
 
 CLI:
-    claude_powers.py recall "what did I decide about the backup schedule"
-    claude_powers.py quiz   "<note text>"
-    claude_powers.py tldr   "<note text>"
+    architect_powers.py recall "what did I decide about the backup schedule"
+    architect_powers.py quiz   "<note text>"
+    architect_powers.py tldr   "<note text>"
 """
 from __future__ import annotations
 
@@ -43,16 +43,16 @@ MODEL      = os.getenv("MYOS_LLM_MODEL", "qwen3:8b")
 # Folders that hold real knowledge (skip tag stubs, templates, raw scans and
 # Obsidian internals). Built from myos_paths so a vault re-fold can't silently
 # break recall — this list once pointed at folders that no longer existed.
-# claude_memory (CLAUDE/) and inventory are included so recall can answer from
-# Claude's own memory (a past root cause, a setup decision) and from the
+# architect_memory (ARCHITECT/) and inventory are included so recall can answer from
+# The architect's own memory (a past root cause, a setup decision) and from the
 # inventory notes (what hardware the user owns). Override with "recall_dirs".
 SEARCH_DIRS = [mp.config()["dirs"][k] for k in
                mp.config().get("recall_dirs",
                                ("myos", "academics", "systems", "source_material",
-                                "projects", "inbox", "journal", "claude_memory", "inventory"))
+                                "projects", "inbox", "journal", "architect_memory", "inventory"))
                if k in mp.config()["dirs"]]
 # Real knowledge notes are small; anything huge is a session log / transcript
-# dump (e.g. the "claude prompt" files) and would pollute recall. Skip them.
+# dump (e.g. the "agent prompt" files) and would pollute recall. Skip them.
 MAX_NOTE_BYTES = 40_000
 _STOP = {
     "the","a","an","and","or","but","of","to","in","on","for","is","are","was",

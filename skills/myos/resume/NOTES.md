@@ -8,6 +8,6 @@ Design background. Not on the runtime path; read when working *on* the skill, no
 It **orients only** — updating the anchors at the *end* of work is a separate discipline, deliberately kept out of this skill so `resume` stays safe and read-only.
 
 ## Split of labour
-Claude plans, Hermes captures. Hermes can present the anchors + triage + device/sync line offline, but the *next action* on a 🟢 thread is often judgment/multi-step — that's Claude's call, so the skill stops and asks rather than auto-executing.
+The architect plans, Hermes captures. Hermes can present the anchors + triage + device/sync line offline, but the *next action* on a 🟢 thread is often judgment/multi-step — that's the architect's call, so the skill stops and asks rather than auto-executing.
 
-Because Claude's memory lives in the vault (see `myos_claude_memory_sync.sh`), both agents read the same anchors: whichever one starts the session sees the same state.
+Because the architect's memory lives in the vault (see `myos_memory_sync.sh`), both agents read the same anchors: whichever one starts the session sees the same state.

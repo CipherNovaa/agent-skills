@@ -19,7 +19,7 @@ The first thing to run at the **start of a session** or after a **device switch*
 - After a device switch (laptop ↔ desktop).
 
 ## Source of truth (read in this order)
-All under `<claude_memory>` = `python $MYOS_ENGINES/myos_paths.py get claude_memory`, except the build log:
+All under `<architect_memory>` = `python $MYOS_ENGINES/myos_paths.py get architect_memory`, except the build log:
 1. **`Active Threads.md`** — the **▶ RESUME callout** is the single source of truth for *where we are + next step*.
 2. **`MEMORY.md`** — the memory index (terse). Pull the one project memory the RESUME block names.
 3. **`<myos>/myOS Build Log.md`** (`myos_paths.py get myos`) — the **last entry** is the current frontier (cross-check against RESUME).
@@ -40,7 +40,7 @@ All under `<claude_memory>` = `python $MYOS_ENGINES/myos_paths.py get claude_mem
 - **Read-only.** Never edits Active Threads, the build log, or memory. (Updating those at the *end* of work is a separate discipline.)
 - **The RESUME callout wins.** If it's missing or contradicts the build log's last entry → don't guess: say so, show both, and `escalate-to-architect` (or hand to the user).
 - **Don't re-derive** what's already written — surface the anchors, don't reconstruct from code/git.
-- **Hermes-lite (offline):** Hermes presents anchors + triage + device/sync line verbatim. It must **not** attempt a judgment/multi-step next action — that's Claude's; leave it for the user or escalate.
+- **Hermes-lite (offline):** Hermes presents anchors + triage + device/sync line verbatim. It must **not** attempt a judgment/multi-step next action — that's the architect's; leave it for the user or escalate.
 
 ## Verification
 - The brief names a single ▶ Next action taken from the RESUME callout (not invented).

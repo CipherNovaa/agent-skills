@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # myOS :: UNDO the vault-canonical memory setup.
-# Replaces each symlink in Claude's flat memory dir with the real file copied
+# Replaces each symlink in the architect's flat memory dir with the real file copied
 # back from the vault, restoring the original pre-transfer state.
-# (Vault/CLAUDE copies are left in place; delete them by hand if you want them gone.)
+# (Vault/ARCHITECT copies are left in place; delete them by hand if you want them gone.)
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PY="${MYOS_PYTHON:-python3}"
-MEM="${MYOS_CLAUDE_MEMORY_DIR:-$("$PY" "$HERE/myos_paths.py" memory)}"
-VAULT_CLAUDE="$("$PY" "$HERE/myos_paths.py" get claude_memory)"
+MEM="${MYOS_ARCHITECT_MEMORY_DIR:-$("$PY" "$HERE/myos_paths.py" memory)}"
+VAULT_ARCHITECT="$("$PY" "$HERE/myos_paths.py" get architect_memory)"
 if [[ -z "$MEM" ]]; then
-  echo "claude_memory_dir is not configured (paths.json or MYOS_CLAUDE_MEMORY_DIR) — nothing to do" >&2
+  echo "architect_memory_dir is not configured (paths.json or MYOS_ARCHITECT_MEMORY_DIR) — nothing to do" >&2
   exit 0
 fi
 mkdir -p "$MEM"

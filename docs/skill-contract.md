@@ -12,7 +12,7 @@ cleanly between the two systems.
 | `name` | kebab slug = folder name |
 | `description` | one line, "Use when …" trigger style (the index/routing key; Hermes truncates it in the index, the full body loads when the skill is used) |
 | `platforms` | e.g. `[linux]` — gates where it runs |
-| `runner` | `either \| hermes \| claude` — Claude plans, Hermes captures |
+| `runner` | `either \| hermes \| architect` — the architect plans, Hermes captures |
 | `status` | `draft \| published` — **earned autonomy**: graduates draft→published once proven |
 | `confidence` | `0.0–1.0` — how battle-tested; nudge up as it proves out |
 | `source` | `taught \| learned \| imported` |

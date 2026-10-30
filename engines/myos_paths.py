@@ -16,8 +16,8 @@ Resilience by design:
 Where things are looked up:
   MYOS_CONFIG              path of the JSON config   (default ~/.config/myos/paths.json)
   MYOS_VAULT               the vault root            (default: config "vault", else ~/Documents/Obsidian Vault)
-  MYOS_CLAUDE_MEMORY_DIR   Claude Code's memory dir for the project whose memory
-                           is mirrored into the vault (default: config "claude_memory_dir")
+  MYOS_ARCHITECT_MEMORY_DIR   the cloud agent's memory dir for the project whose memory
+                           is mirrored into the vault (default: config "architect_memory_dir")
   MYOS_SKILLS_DIR          where the skills live     (default: config "skills_dir",
                            else <vault>/HERMES/Skills/myos)
 
@@ -26,7 +26,7 @@ CLI (so shell scripts can use it too):
     python myos_paths.py get inbox      # print one absolute path
     python myos_paths.py vault          # print the vault root
     python myos_paths.py skills         # print the skills dir
-    python myos_paths.py memory         # print Claude's memory dir ('' if unset)
+    python myos_paths.py memory         # print the architect's memory dir ('' if unset)
     python myos_paths.py layout         # print current layout name
 """
 from __future__ import annotations
@@ -46,9 +46,9 @@ DEFAULTS = {
     "schema_version": 1,
     "layout": "layers-v1",
     "vault": str(Path.home() / "Documents" / "Obsidian Vault"),
-    # Claude Code keeps per-project memory under ~/.claude/projects/<slug>/memory.
+    # The cloud coding agent keeps per-project memory in a directory of its own.
     # Point this at the one you want mirrored into the vault ("" = feature off).
-    "claude_memory_dir": "",
+    "architect_memory_dir": "",
     # Where the SKILL.md tree lives. "" = <vault>/HERMES/Skills/myos.
     "skills_dir": "",
     "dirs": {
@@ -66,7 +66,7 @@ DEFAULTS = {
         "templates": "Templates",
         "images": "Images",
         "archive": "_Archive",
-        "claude_memory": "CLAUDE",
+        "architect_memory": "ARCHITECT",
     },
     # Paths never treated as live knowledge.
     "exclude_globs": ["**/_Archive/**", "**/Archive/**", "**/.trash/**"],
@@ -93,7 +93,7 @@ def _load() -> dict:
         print(f"[myos_paths] WARNING: ignoring bad {CONFIG_FILE}: {e}", file=sys.stderr)
     # Environment wins over the file.
     for env, key in (("MYOS_VAULT", "vault"),
-                     ("MYOS_CLAUDE_MEMORY_DIR", "claude_memory_dir"),
+                     ("MYOS_ARCHITECT_MEMORY_DIR", "architect_memory_dir"),
                      ("MYOS_SKILLS_DIR", "skills_dir")):
         if os.environ.get(env):
             cfg[key] = os.environ[env]
@@ -131,9 +131,9 @@ def skills_dir() -> Path:
     return Path(raw).expanduser() if raw else vault_root() / "HERMES" / "Skills" / "myos"
 
 
-def claude_memory_dir() -> Path | None:
-    """Claude Code's flat memory dir that mirrors <vault>/CLAUDE, or None if unset."""
-    raw = _CFG.get("claude_memory_dir") or ""
+def architect_memory_dir() -> Path | None:
+    """The cloud agent's flat memory dir that mirrors <vault>/ARCHITECT, or None if unset."""
+    raw = _CFG.get("architect_memory_dir") or ""
     return Path(raw).expanduser() if raw else None
 
 
@@ -160,7 +160,7 @@ def _selftest() -> int:
     print(f"vault  : {vr}  exists={vr.exists()}")
     print(f"config : {CONFIG_FILE}  exists={CONFIG_FILE.exists()}")
     print(f"skills : {skills_dir()}  exists={skills_dir().exists()}")
-    mem = claude_memory_dir()
+    mem = architect_memory_dir()
     print(f"memory : {mem or '(unset)'}" + (f"  exists={mem.exists()}" if mem else ""))
     print("dirs:")
     missing = []
@@ -193,7 +193,7 @@ def main(argv: list[str]) -> int:
         print(skills_dir())
         return 0
     if cmd == "memory":
-        print(claude_memory_dir() or "")
+        print(architect_memory_dir() or "")
         return 0
     print(__doc__)
     return 2

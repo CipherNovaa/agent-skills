@@ -5,7 +5,7 @@ myos_semrecall.py — semantic retrieval over the vault (idea mined from Odysseu
 Odysseus does semantic memory via an Ollama embeddings API + a vector store.
 This is the myOS-faithful adaptation: embeddings from the LOCAL Ollama, vectors
 cached in a small local .npz index — no ChromaDB, no Docker. Offline, portable,
-Hermes-runnable. Reuses claude_powers' note-iteration + lexical scoring so the
+Hermes-runnable. Reuses architect_powers' note-iteration + lexical scoring so the
 two rankers stay consistent, and offers a HYBRID (semantic + lexical) rank that
 fixes what pure-lexical missed (synonyms like "typeface" -> "font"/"Iosevka").
 
@@ -29,7 +29,7 @@ import numpy as np
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import claude_powers as cp   # reuse VAULT, _iter_notes, _keywords, _excerpt
+import architect_powers as cp   # reuse VAULT, _iter_notes, _keywords, _excerpt
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/") + "/api/embeddings"
 EMBED_MODEL = os.getenv("MYOS_EMBED_MODEL", "all-minilm")
@@ -114,7 +114,7 @@ def _load_index() -> tuple[list[dict], np.ndarray]:
 
 
 def _lex_scores(query: str, titles_texts: list[tuple[str, str]]) -> np.ndarray:
-    """Reuse claude_powers' TF-IDF-ish idea, returned as a 0-1 normalised vector."""
+    """Reuse architect_powers' TF-IDF-ish idea, returned as a 0-1 normalised vector."""
     kws = cp._keywords(query)
     if not kws:
         return np.zeros(len(titles_texts), dtype=np.float32)
@@ -135,7 +135,7 @@ def _lex_scores(query: str, titles_texts: list[tuple[str, str]]) -> np.ndarray:
         s = 0.0
         for k in kws:
             if b[k] or t[k]:
-                # tf term (sublinear) + 3x title boost, mirroring claude_powers.
+                # tf term (sublinear) + 3x title boost, mirroring architect_powers.
                 # NB: the title term must be OUTSIDE the conditional — a previous
                 # precedence slip made the boost apply only when b[k] was 0.
                 tf = (1 + math.log(b[k])) if b[k] else 0.0

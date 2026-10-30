@@ -3,7 +3,7 @@
   "schema_version": 1,
   "layout": "layers-v1",
   "vault": "~/Documents/Obsidian Vault",
-  "claude_memory_dir": "~/.claude/projects/<your-project-slug>/memory",
+  "architect_memory_dir": "~/path/to/your-agent/memory",
   "skills_dir": "",
   "dirs": {
     "inbox": "0 Capture/Inbox",
@@ -20,10 +20,10 @@
     "templates": "Templates",
     "images": "Images",
     "archive": "_Archive",
-    "claude_memory": "CLAUDE"
+    "architect_memory": "ARCHITECT"
   },
   "managed_dirs": ["inbox", "tasks", "journal", "projects"],
-  "recall_dirs": ["myos", "academics", "systems", "source_material", "projects", "inbox", "journal", "claude_memory", "inventory"],
+  "recall_dirs": ["myos", "academics", "systems", "source_material", "projects", "inbox", "journal", "architect_memory", "inventory"],
   "janitor_skip": [],
   "exclude_globs": ["**/_Archive/**", "**/Archive/**", "**/.trash/**"]
 }

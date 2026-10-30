@@ -30,7 +30,7 @@ The vault's **manager, not its worker**. Scans read-only for drift and emits a p
    - a missing/expected skill → restore from git, or `escalate-to-architect`
    - invalid SKILL.md YAML → fix the frontmatter (quote any value containing `: `)
    - 🚨 **broken feature contract** (a template edit severed a coupling listed in `contracts.json`) → `escalate-to-architect`; `--escalate` already appended it to `Escalations.md`. Add a contract whenever a new template↔code coupling is introduced.
-   - memory index too big / memory duplicated → `escalate-to-architect` / `myos_claude_memory_sync.sh`
+   - memory index too big / memory duplicated → `escalate-to-architect` / `myos_memory_sync.sh`
 4. Never mass-fix. Route what the user OKs; leave the rest on the list.
 
 ## Pitfalls

@@ -23,7 +23,7 @@ Checks:
   * template health  — a template using an expression the engine can't render   → fix template / engine.
   * feature contracts — a template/code coupling listed in contracts.json no longer
                       holds (a freely-edited template severed a feature)      → escalate-to-architect.
-  * memory index     — CLAUDE/MEMORY.md is loaded whole each session and TRUNCATES
+  * memory index     — ARCHITECT/MEMORY.md is loaded whole each session and TRUNCATES
                       past a read limit SILENTLY (lost memories, no error)      → compact the index.
   * memory symlinks  — each memory must be one vault file + a symlink; a real
                       file on both sides = two copies that drift               → run the reconciler.
@@ -58,7 +58,7 @@ MANIFEST = Path(os.path.expanduser(
     os.environ.get("MYOS_EXPECTED_SKILLS", "~/.config/myos/expected_skills.txt")))
 CONTRACTS = Path(os.path.expanduser(
     os.environ.get("MYOS_CONTRACTS", "~/.config/myos/contracts.json")))
-CLAUDE_DIR = mp.d("claude_memory")
+ARCHITECT_DIR = mp.d("architect_memory")
 
 
 def _rel_or_none(p: Path) -> str | None:
@@ -73,7 +73,7 @@ _SKIP_PARTS = {".obsidian", ".git", ".stversions", ".trash", "_Archive",
 _DIRS = mp.config()["dirs"]
 _SKIP_REL_PREFIXES = tuple(p for p in (
     _rel_or_none(SKILLS_DIR),   # skills aren't user notes
-    _DIRS.get("claude_memory"), # Claude's memory/planning — own format (nested metadata:)
+    _DIRS.get("architect_memory"), # The architect's memory/planning — own format (nested metadata:)
     _DIRS.get("sandbox"),       # scratch/experiments by definition
     _DIRS.get("inbox"),         # raw captures — typed when filed, not before
 ) if p) + tuple(mp.config().get("janitor_skip", []))   # e.g. a shared folder with its own versioning
@@ -205,7 +205,7 @@ def check_broken_links() -> Finding:
     notes = list(_iter_notes())
     # Obsidian resolves a PATH-style link ([[folder/Note]]) by path suffix, so we
     # check against every path in the WHOLE vault (wider than _iter_notes: a
-    # link INTO an excluded dir like [[CLAUDE/START HERE]] is not broken; a link
+    # link INTO an excluded dir like [[ARCHITECT/START HERE]] is not broken; a link
     # whose target only survives in _Archive under a different path still is).
     # Include NON-.md files: a path-style embed of an attachment
     # ([[Images/scans/foo.png]]) is a real target, not a broken note link.
@@ -348,8 +348,8 @@ def check_rogue_myos_folders() -> Finding:
         if cp is None or set(p.relative_to(VAULT).parts) & _INBOX_SKIP:
             continue
         rel = str(p.relative_to(VAULT))
-        # Skip non-vault-note trees that legitimately mirror layer names (Claude's memory
-        # `CLAUDE/Projects`, an export mirror, a shared folder, the skills tree).
+        # Skip non-vault-note trees that legitimately mirror layer names (the architect's memory
+        # `ARCHITECT/Projects`, an export mirror, a shared folder, the skills tree).
         if any(rel.startswith(pre) for pre in _SKIP_REL_PREFIXES):
             continue
         if p.resolve() != cp:
@@ -361,16 +361,16 @@ def check_rogue_myos_folders() -> Finding:
 
 
 def check_memory_index_size() -> Finding:
-    """Claude's memory index (CLAUDE/MEMORY.md) is loaded whole every session and
+    """The architect's memory index (ARCHITECT/MEMORY.md) is loaded whole every session and
     TRUNCATES past a read limit — silently. Everything past the cut is simply
-    invisible to Claude, with no error at read time, so memories can go missing
+    invisible to the architect, with no error at read time, so memories can go missing
     without anyone noticing. Growth has two sources: new memories (fine) and
     existing one-line entries fattening as projects advance (not fine — that
     detail belongs in the topic file). Flag it early so the index gets compacted
     on purpose instead of by accident."""
-    idx = CLAUDE_DIR / "MEMORY.md"
+    idx = ARCHITECT_DIR / "MEMORY.md"
     if not idx.is_file():
-        return Finding(False, "Claude memory index missing (CLAUDE/MEMORY.md)",
+        return Finding(False, "Architect memory index missing (ARCHITECT/MEMORY.md)",
                        count=1, owner="escalate-to-architect", critical=True)
     size = idx.stat().st_size
     entries = len([ln for ln in idx.read_text(errors="ignore").splitlines()
@@ -387,24 +387,24 @@ def check_memory_index_size() -> Finding:
     if per > 400 and size >= 12_000:
         problems.append(f"entries average {per}B — index lines are absorbing project "
                         "detail again (target ~230B, one line per memory)")
-    return Finding(not problems, f"Claude memory index size ({size/1024:.1f}KB, {entries} entries)",
+    return Finding(not problems, f"Architect memory index size ({size/1024:.1f}KB, {entries} entries)",
                    count=len(problems), owner="escalate-to-architect",
                    examples=problems, critical=size >= 17_000)
 
 
 def check_memory_symlinks() -> Finding:
     """Every memory should exist ONCE: a real file in the vault, symlinked into
-    Claude's recall dir. A real file on BOTH sides means two copies that drift
+    the architect's recall dir. A real file on BOTH sides means two copies that drift
     apart silently — the reconciler refuses to guess which one wins, so it just
     warns forever and the sync becomes a manual step someone will forget."""
-    mem = mp.claude_memory_dir()
+    mem = mp.architect_memory_dir()
     if mem is None or not mem.is_dir():
-        return Finding(True, "Claude memory symlinks (no recall dir)")
+        return Finding(True, "Architect memory symlinks (no recall dir)")
     problems = []
     for f in sorted(mem.glob("*.md")):
         if f.is_symlink():
             continue
-        cand = [CLAUDE_DIR / f.name] + [CLAUDE_DIR / c / f.name
+        cand = [ARCHITECT_DIR / f.name] + [ARCHITECT_DIR / c / f.name
                 for c in ("User", "Feedback", "Projects", "Reference")]
         twin = next((c for c in cand if c.is_file()), None)
         if twin is None:
@@ -412,8 +412,8 @@ def check_memory_symlinks() -> Finding:
         same = twin.read_bytes() == f.read_bytes()
         problems.append(f"{f.name}: real file on BOTH sides"
                         + ("" if same else " AND THEY DIFFER") + f" (vault: {twin.name})")
-    return Finding(not problems, "Claude memory symlinks (one copy per memory)",
-                   count=len(problems), owner="myos_claude_memory_sync.sh",
+    return Finding(not problems, "Architect memory symlinks (one copy per memory)",
+                   count=len(problems), owner="myos_memory_sync.sh",
                    examples=problems,
                    critical=any("DIFFER" in p for p in problems))
 
@@ -428,12 +428,12 @@ def run() -> list[Finding]:
     return [c() for c in CHECKS]
 
 
-ESCALATIONS = CLAUDE_DIR / "Escalations.md"
+ESCALATIONS = ARCHITECT_DIR / "Escalations.md"
 
 
 def escalate(findings: list[Finding]) -> int:
     """Append CRITICAL failing findings to the architect Escalations queue so a
-    feature-breaking regression reaches Claude async (not just a morning punch-list).
+    feature-breaking regression reaches the architect async (not just a morning punch-list).
     Idempotent: the exact broken-contract text already present in the file (OPEN or
     resolved) is not re-appended."""
     from datetime import datetime

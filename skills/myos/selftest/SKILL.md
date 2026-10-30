@@ -21,10 +21,10 @@ Runs the real myOS capability checks — actually exercises each tool rather tha
 ## Procedure
 1. Run: `bash $MYOS_ENGINES/myos_selftest.sh`.
 2. Relay its output verbatim (the ✅/❌ lines).
-3. For any ❌, take the obvious fix if one is named (e.g. broken memory links → `bash $MYOS_ENGINES/myos_claude_memory_sync.sh`); otherwise run `escalate-to-architect`.
+3. For any ❌, take the obvious fix if one is named (e.g. broken memory links → `bash $MYOS_ENGINES/myos_memory_sync.sh`); otherwise run `escalate-to-architect`.
 
 ## What it checks
-spine + inbox resolves · inbox writable (writes and removes a file) · every template renders · Claude memory links intact · Hermes myOS skills loaded · ollama up · embedding model present · gateway active.
+spine + inbox resolves · inbox writable (writes and removes a file) · every template renders · the architect memory links intact · Hermes myOS skills loaded · ollama up · embedding model present · gateway active.
 
 ## Pitfalls
 - **Relay verbatim** — never summarize a ❌ into an "all good". That's the exact failure mode this skill exists to kill.

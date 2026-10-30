@@ -28,7 +28,7 @@ The weekly maintenance + reflection pass. Keeps entropy down and surfaces the we
      `python $MYOS_ENGINES/myos_apply_template.py "Weekly Review" "$WK" --dir journal`
 5. Pull the facts, don't invent them:
    - tasks done this week: `python $MYOS_ENGINES/myos_task.py list --all` (done lines carry a `✅ YYYY-MM-DD` stamp);
-   - open escalations: the `Status: OPEN` entries in `<claude_memory>/Escalations.md`;
+   - open escalations: the `Status: OPEN` entries in `<architect_memory>/Escalations.md`;
    - the janitor punch-list from step 2.
 6. Fill the prose from the skim — **what actually moved / a win / biggest blocker**, a short
    **drift** section (the janitor items worth routing this week), and **next week — pick 3**

@@ -2,10 +2,10 @@
 name: my-skill-slug            # kebab-case; MUST equal the folder name
 description: One line in "Use when …" style — this is what the skills index shows and what routing matches on. Name the trigger.
 platforms: [linux]
-runner: either                 # either | hermes | claude  — who can run it (Claude plans, Hermes captures)
+runner: either                 # either | hermes | architect  — who can run it (the architect plans, Hermes captures)
 status: draft                  # draft | published  — earned autonomy: a skill graduates draft→published once proven
 confidence: 0.60               # 0.0–1.0  — how battle-tested it is; nudge up as it proves out
-source: taught                 # taught | learned | imported  — taught = the user + Claude authored it
+source: taught                 # taught | learned | imported  — taught = the user + the architect authored it
 version: 1.0.0                 # semver; bump the minor on a material change, patch on a tweak
 escalate_when: <the condition under which Hermes should stop and run escalate-to-architect instead of guessing>
 ---
